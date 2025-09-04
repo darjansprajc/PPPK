@@ -1,0 +1,53 @@
+﻿@model HospitalApp.Models.Patient
+
+<div class="modal fade" id="addPatientModal" tabindex="-1" aria-labelledby="addPatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-action="AddPatient">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPatientModalLabel">Add new patient</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" name="FirstName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" name="LastName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="oib" class="form-label">OIB</label>
+                        <input type="text"
+                               class="form-control"
+                               id="oib"
+                               name="Oib"
+                               required
+                               pattern="\d{11}"
+                               title="OIB must be exactly 11 digits" />
+                        <div class="invalid-feedback">
+                            OIB must be exactly 11 digits.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="dateOfBirth" name="DateOfBirth" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Gender</label>
+                        <select class="form-select" id="gender" name="Gender" required>
+                            <option value="">Select gender...</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Patient</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

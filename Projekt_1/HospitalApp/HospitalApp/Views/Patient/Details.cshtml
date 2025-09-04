@@ -1,0 +1,163 @@
+﻿@{
+    var patient = ViewBag.Patient as HospitalApp.Models.Patient;
+    var medicalDocuments = (patient?.MedicalDocuments ?? new List<HospitalApp.Models.MedicalDocument>())
+        .OrderByDescending(md => md.StartOfSickness).ToList();
+    var recipes = (patient?.Recipes ?? new List<HospitalApp.Models.Recipe>())
+        .OrderByDescending(r => r.StartOfMedication).ToList();
+    var checkups = (patient?.Checkups ?? new List<HospitalApp.Models.Checkup>())
+        .OrderByDescending(c => c.Time).ToList();
+}
+
+@await Html.PartialAsync("_EditModal", patient)
+@await Html.PartialAsync("_DeleteModal", patient)
+@await Html.PartialAsync("../MedicalDocument/_AddModal", new HospitalApp.Models.MedicalDocument { PatientId = patient?.Id ?? 0 })
+@await Html.PartialAsync("../Recipe/_AddModal", new HospitalApp.Models.Recipe { PatientId = patient?.Id ?? 0 })
+@await Html.PartialAsync("../Checkup/_AddModal", new HospitalApp.Models.Checkup { PatientId = patient?.Id ?? 0 })
+
+<div class="container-fluid py-4 px-2">
+    <div class="row" style="height: 26vh;">
+        <div class="col-12 position-relative">
+            <div class="position-absolute end-0 mt-2 me-2" style="z-index:2;">
+                <a class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#editPatientModal">Edit</a>
+                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePatientModal">Delete</a>
+            </div>
+            <div>
+                <div class="mb-2"><strong>First Name:</strong> @patient?.FirstName</div>
+                <div class="mb-2"><strong>Last Name:</strong> @patient?.LastName</div>
+                <div class="mb-2"><strong>OIB:</strong> @patient?.Oib</div>
+                <div class="mb-2"><strong>Date of Birth:</strong> @patient?.DateOfBirth.ToString("dd.MM.yyyy")</div>
+                <div class="mb-2"><strong>Gender:</strong> @patient?.Gender</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-0 position-relative" style="height: 50vh;">
+        <div class="col-4 d-flex flex-column align-items-start">
+            <button type="button" class="btn btn-primary mb-2" style="width: auto;" data-bs-toggle="modal" data-bs-target="#addMedicalDocumentModal">
+                Create new medical document
+            </button>
+            <div class="scrollable-table">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Medical history</th>
+                            <th>Start Date</th>
+                            <th class="details-col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var doc in medicalDocuments)
+                        {
+                            <tr>
+                                <td>@doc.Title</td>
+                                <td>@doc.StartOfSickness.ToString("dd.MM.yyyy")</td>
+                                <td class="details-col">
+                                    <button type="button"
+                                            class="btn btn-primary"
+                                            onclick="showMedicalDocumentDetails(@doc.Id)">
+                                        Details
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-4 d-flex flex-column align-items-start">
+            <button type="button" class="btn btn-primary mb-2" style="width: auto;" data-bs-toggle="modal" data-bs-target="#addRecipeModal">
+                Create new prescription
+            </button>
+            <div class="scrollable-table">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Prescribed medication</th>
+                            <th>Start date</th>
+                            <th class="details-col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var recipe in recipes)
+                        {
+                            <tr>
+                                <td>@recipe.Medicine</td>
+                                <td>@recipe.StartOfMedication.ToString("dd.MM.yyyy")</td>
+                                <td class="details-col">
+                                    <button type="button"
+                                            class="btn btn-primary"
+                                            onclick="showRecipeDetails(@recipe.Id)">
+                                        Details
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-4 d-flex flex-column align-items-start">
+            <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#addCheckupModal">
+                Schedule new checkup
+            </button>
+            <div class="scrollable-table">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Checkups</th>
+                            <th>Scheduled</th>
+                            <th class="details-col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var checkup in checkups)
+                        {
+                            <tr>
+                                <td>@checkup.Title</td>
+                                <td>@checkup.Time.ToString("dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture)</td>
+                                <td class="details-col">
+                                    <button type="button"
+                                            class="btn btn-primary"
+                                            onclick="showCheckupDetails(@checkup.Id)">
+                                        Details
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="medicalDocumentDetailsContainer"></div>
+<div id="recipeDetailsContainer"></div>
+<div id="checkupDetailsContainer"></div>
+
+@section Scripts {
+    <script>
+        function showMedicalDocumentDetails(documentId) {
+            $.get('/MedicalDocument/Details', { id: documentId }, function (data) {
+                $('#medicalDocumentDetailsContainer').html(data);
+                $('#medicalDocumentDetailsModal').modal('show');
+            });
+        }
+
+        function showRecipeDetails(recipeId) {
+            $.get('/Recipe/Details', { id: recipeId }, function (data) {
+                $('#recipeDetailsContainer').html(data);
+                $('#recipeDetailsModal').modal('show');
+            });
+        }
+
+        function showCheckupDetails(checkupId) {
+            $.get('/Checkup/Details', { id: checkupId }, function (data) {
+                $('#checkupDetailsContainer').html(data);
+                $('#checkupDetailsModal').modal('show');
+            });
+        }
+    </script>
+}

@@ -1,0 +1,54 @@
+﻿@model HospitalApp.Models.Patient
+
+<div class="modal fade" id="editPatientModal" tabindex="-1" aria-labelledby="editPatientModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-action="EditPatient" asp-controller="Patient" novalidate>
+                <input type="hidden" name="Id" value="@Model?.Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPatientModalLabel">Edit Patient</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editFirstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="editFirstName" name="FirstName" value="@Model?.FirstName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editLastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="editLastName" name="LastName" value="@Model?.LastName" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editOib" class="form-label">OIB</label>
+                        <input type="text"
+                               class="form-control"
+                               id="editOib"
+                               name="Oib"
+                               value="@Model?.Oib"
+                               required
+                               pattern="\d{11}"
+                               title="OIB must be exactly 11 digits" />
+                        <div class="invalid-feedback">
+                            OIB must be exactly 11 digits.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDateOfBirth" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" id="editDateOfBirth" name="DateOfBirth" value="@Model?.DateOfBirth.ToString("yyyy-MM-dd")" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="editGender" class="form-label">Gender</label>
+                        <select class="form-select" id="editGender" name="Gender" required>
+                            <option value="M" selected="@(Model?.Gender == 'M')">Male</option>
+                            <option value="F" selected="@(Model?.Gender == 'F')">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

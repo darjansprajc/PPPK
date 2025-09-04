@@ -1,0 +1,82 @@
+﻿@model HospitalApp.Models.Recipe
+
+<div class="modal fade" id="recipeDetailsModal" tabindex="-1" aria-labelledby="recipeDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="recipeEditForm" method="post" asp-controller="Recipe" asp-action="Edit" style="display: contents;">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeDetailsLabel">Prescription Details</h5>
+                    <button type="button" class="btn-close" id="closeRecipeBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="recipeViewMode">
+                        <div class="mb-3">
+                            <label class="form-label">Doctor</label>
+                            <div class="form-control">@Model.Doctor?.FirstName @Model.Doctor?.LastName</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Patient</label>
+                            <div class="form-control">@Model.Patient?.FirstName @Model.Patient?.LastName</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Medicine</label>
+                            <div class="form-control">@Model.Medicine</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <div class="form-control">@Model.Description</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Start Of Medication</label>
+                            <div class="form-control">@Model.StartOfMedication.ToString("dd.MM.yyyy")</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">End Of Medication</label>
+                            <div class="form-control">@Model.EndOfMedication.ToString("dd.MM.yyyy")</div>
+                        </div>
+                    </div>
+                    <div id="recipeEditMode" style="display:none;">
+                        <div class="mb-3">
+                            <label class="form-label">Medicine</label>
+                            <input type="text" class="form-control" name="Medicine" value="@Model.Medicine" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-control" name="Description" value="@Model.Description" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Start Of Medication</label>
+                            <input type="date" class="form-control" name="StartOfMedication" value="@Model.StartOfMedication.ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">End Of Medication</label>
+                            <input type="date" class="form-control" name="EndOfMedication" value="@Model.EndOfMedication.ToString("yyyy-MM-dd")" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="editRecipeBtn" class="btn btn-warning" onclick="toggleRecipeEditMode(true)">Edit</button>
+                    <button type="button" id="cancelRecipeEditBtn" class="btn btn-secondary" style="display:none;" onclick="toggleRecipeEditMode(false)">Cancel</button>
+                    <button type="submit" id="confirmRecipeEditBtn" class="btn btn-primary" style="display:none;">Confirm</button>
+                    <button type="button" class="btn btn-secondary" id="closeRecipeFooterBtn" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleRecipeEditMode(editMode) {
+        document.getElementById('recipeViewMode').style.display = editMode ? 'none' : '';
+        document.getElementById('recipeEditMode').style.display = editMode ? '' : 'none';
+        document.getElementById('editRecipeBtn').style.display = editMode ? 'none' : '';
+        document.getElementById('cancelRecipeEditBtn').style.display = editMode ? '' : 'none';
+        document.getElementById('confirmRecipeEditBtn').style.display = editMode ? '' : 'none';
+        document.getElementById('closeRecipeBtn').style.display = editMode ? 'none' : '';
+        document.getElementById('closeRecipeFooterBtn').style.display = editMode ? 'none' : '';
+        document.getElementById('recipeDetailsLabel').textContent = editMode
+            ? 'Edit Prescription'
+            : 'Prescription Details';
+    }
+</script>

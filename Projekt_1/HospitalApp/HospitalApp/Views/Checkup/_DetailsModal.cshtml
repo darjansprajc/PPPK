@@ -1,0 +1,124 @@
+﻿@model HospitalApp.Models.Checkup
+@{
+    var checkupTypes = ViewBag.CheckupTypes as List<HospitalApp.Models.CheckupType> ?? Enumerable.Empty<HospitalApp.Models.CheckupType>();
+    var doctors = ViewBag.Doctors as List<HospitalApp.Models.Doctor> ?? Enumerable.Empty<HospitalApp.Models.Doctor>();
+}
+
+<div class="modal fade" id="checkupDetailsModal" tabindex="-1" aria-labelledby="checkupDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="checkupEditForm" method="post" asp-controller="Checkup" asp-action="Edit" enctype="multipart/form-data" style="display: contents;">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="checkupDetailsLabel">Checkup Details</h5>
+                    <button type="button" class="btn-close" id="closeCheckupBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="checkupViewMode">
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <div class="form-control">@Model.Title</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <div class="form-control">@Model.Description</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date & Time</label>
+                            <div class="form-control">@Model.Time.ToString("dd.MM.yyyy HH:mm")</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Type</label>
+                            <div class="form-control">@Model.Type?.Name (@Model.Type?.Acronym)</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Doctors</label>
+                            <div class="form-control">
+                                @foreach (var cd in Model.CheckupDoctors)
+                                {
+                                    <span>@cd.Doctor.FirstName @cd.Doctor.LastName</span><br />
+                                }
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Documents/Images</label>
+                            <div class="form-control">
+                                @foreach (var img in Model.CheckupImages)
+                                {
+                                    <a href="@Url.Action("DownloadImage", "Checkup", new { id = img.Id })" target="_blank">@img.Name</a><br />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div id="checkupEditMode" style="display:none;">
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" name="Title" value="@Model.Title" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-control" name="Description" value="@Model.Description" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date & Time</label>
+                            <input type="datetime-local" class="form-control" name="Time" value="@Model.Time.ToString("yyyy-MM-ddTHH:mm")" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" name="TypeId" required>
+                                @foreach (var type in checkupTypes)
+                                {
+                                    var selected = type.Id == Model.TypeId ? "selected" : "";
+                                    @:<option value="@type.Id" @selected>@type.Name (@type.Acronym)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Doctors</label>
+                            <select class="form-select" name="DoctorIds" id="editDoctorIds" multiple required>
+                                @foreach (var doc in doctors)
+                                {
+                                    var selected = Model.CheckupDoctors.Any(cd => cd.DoctorId == doc.Id) ? "selected" : "";
+                                    @:<option value="@doc.Id" @selected>@doc.FirstName @doc.LastName</option>
+                                }
+                            </select>
+                            <small class="form-text text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Add Documents/Images</label>
+                            <input type="file" class="form-control" name="CheckupImages" multiple accept="image/*,.pdf,.doc,.docx" />
+                            <small class="form-text text-muted">You can select multiple files. Existing files are listed below.</small>
+                            <div>
+                                @foreach (var img in Model.CheckupImages)
+                                {
+                                    <a href="@Url.Action("DownloadImage", "Checkup", new { id = img.Id })" target="_blank">@img.Name</a><br />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="editCheckupBtn" class="btn btn-warning" onclick="toggleCheckupEditMode(true)">Edit</button>
+                    <button type="button" id="cancelCheckupEditBtn" class="btn btn-secondary" style="display:none;" onclick="toggleCheckupEditMode(false)">Cancel</button>
+                    <button type="submit" id="confirmCheckupEditBtn" class="btn btn-primary" style="display:none;">Confirm</button>
+                    <button type="button" class="btn btn-secondary" id="closeCheckupFooterBtn" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleCheckupEditMode(editMode) {
+        document.getElementById('checkupViewMode').style.display = editMode ? 'none' : '';
+        document.getElementById('checkupEditMode').style.display = editMode ? '' : 'none';
+        document.getElementById('editCheckupBtn').style.display = editMode ? 'none' : '';
+        document.getElementById('cancelCheckupEditBtn').style.display = editMode ? '' : 'none';
+        document.getElementById('confirmCheckupEditBtn').style.display = editMode ? '' : 'none';
+        document.getElementById('closeCheckupBtn').style.display = editMode ? 'none' : '';
+        document.getElementById('closeCheckupFooterBtn').style.display = editMode ? 'none' : '';
+        document.getElementById('checkupDetailsLabel').textContent = editMode
+            ? 'Edit Checkup'
+            : 'Checkup Details';
+    }
+</script>

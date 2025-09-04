@@ -1,0 +1,141 @@
+:root {
+    --main-background: linear-gradient(135deg, #42a5f5 0%, #81d4fa 100%);
+    --secondary-background: linear-gradient(90deg, #cc3a2a 0%, #e57373 100%);
+}
+
+
+body {
+    background: var(--main-background);
+    color: #fff;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.center-content {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-center {
+    text-align: center;
+    width: 100%;
+}
+
+#welcome-title,
+#welcome-description {
+    color: #fff;
+    font-weight: bold;
+}
+
+#welcome-card {
+    max-width: 600px;
+    box-shadow: 0 8px 32px rgba(25, 118, 210, 0.25);
+    border-radius: 20px;
+    background: transparent;
+    border: none;
+    padding: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.navbar {
+    background: var(--secondary-background) !important;
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link {
+    color: #fff !important;
+    font-weight: bold;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:focus,
+.navbar .nav-link:hover {
+    color: #d32f2f !important;
+}
+
+footer.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 100;
+    color: #fff !important;
+    background: var(--secondary-background) !important;
+}
+
+#doctor-badge {
+    font-size: 1.05rem;
+    padding: 0.3em 1.2em;
+}
+
+.table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table td {
+    color: #fff !important;
+}
+
+
+.table th {
+    color: #fff !important;
+}
+
+.details-col {
+    width: 130px;
+    min-width: 130px;
+    max-width: 130px;
+    text-align: center;
+}
+
+.scrollable-table {
+    max-height: 40vh;
+    overflow-y: auto;
+    border: 3px solid #cc3a2a;
+}
+
+.scrollable-table th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--secondary-background);
+}
+
+.modal-header,
+.modal-footer {
+    background: var(--secondary-background) !important;
+}
+
+.modal-body {
+    background: var(--main-background) !important;
+}
+
+.modal-header .modal-title {
+    font-weight: bold;
+}
+
+.modal-content .form-label {
+    font-weight: bold;
+
+}
+
+.details-label {
+    font-weight: bold;
+}
+
+
+

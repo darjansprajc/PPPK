@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Patients";
+    var patients = ViewBag.Patients as List<HospitalApp.Models.Patient>;
+    var search = ViewBag.Search as string;
+}
+
+@await Html.PartialAsync("_AddModal", new HospitalApp.Models.Patient())
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-5 mt-4 py-2" style="max-width: 100%;">
+        <form method="get" class="mb-0" style="flex: 1; max-width: 400px;">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search patients by name or OIB..." value="@search" />
+                <button type="submit" class="btn btn-primary ms-3">Search</button>
+            </div>
+        </form>
+        <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addPatientModal">
+            Add New Patient
+        </button>
+    </div>
+
+        @if (patients != null && patients.Count > 0)
+        {
+            <div class="scrollable-table">
+                <table class="table table-striped ">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>OIB</th>
+                            <th>Date of Birth</th>
+                            <th>Gender</th>
+                            <th class="details-col"></th>
+                        </tr>
+                    </thead>
+                        <tbody class="scrollable-table">
+                            @foreach (var patient in patients)
+                            {
+                                <tr>
+                                    <td>@patient.FirstName</td>
+                                    <td>@patient.LastName</td>
+                                    <td>@patient.Oib</td>
+                                    <td>@patient.DateOfBirth.ToString("dd.MM.yyyy")</td>
+                                    <td>@patient.Gender</td>
+                                    <td class="details-col">
+                                        <a class="btn btn-primary ms-3" asp-controller="Patient" asp-action="Details" asp-route-id="@patient.Id">
+                                            Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                </table>
+            </div>
+
+        <div>
+            <a class="btn btn-success" style="margin: 10px" asp-controller="Patient" asp-action="ExportToCsv">
+                Export to .csv
+            </a>
+        </div>
+        }
+        else
+        {
+            <div class="alert alert-info">No patients found.</div>
+        }
+
+   
+</div>

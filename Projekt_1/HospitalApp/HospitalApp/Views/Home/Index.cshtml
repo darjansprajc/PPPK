@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var doctors = ViewBag.Doctors as List<HospitalApp.Models.Doctor>;
+}
+
+<div class="center-content">
+    <div class="text-center">
+        <h1 id="welcome-title" class="display-4 mb-4">Welcome to HospitalApp</h1>
+        <div id="welcome-card" class="card mx-auto mb-5">
+            <div class="card-body">
+                <p id="welcome-description" class="lead">
+                    An app for doctors to manage their patients, prescribed medicines, checkups and documents.
+                </p>
+            </div>
+        </div>
+        <form method="post" asp-action="SelectDoctor">
+            <select name="doctorId" class="form-select mb-3" style="max-width: 400px; margin: 0 auto;">
+                <option value="">Select a doctor...</option>
+                @foreach (var doctor in doctors)
+                {
+                    <option value="@doctor.Id">@doctor.FirstName @doctor.LastName</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-primary">Choose Doctor</button>
+        </form>
+    </div>
+</div>

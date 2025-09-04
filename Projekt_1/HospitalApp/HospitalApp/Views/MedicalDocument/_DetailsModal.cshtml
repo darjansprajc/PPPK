@@ -1,0 +1,95 @@
+﻿@model HospitalApp.Models.MedicalDocument
+
+<div class="modal fade" id="medicalDocumentDetailsModal" tabindex="-1" aria-labelledby="medicalDocumentDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="medicalDocumentEditForm" method="post" asp-controller="MedicalDocument" asp-action="Edit" style="display: contents;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="medicalDocumentDetailsLabel">Medical Document Details</h5>
+                    <button type="button" class="btn-close" id="closeMedicalDocumentBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="medicalDocumentViewMode">
+                        <div class="mb-3">
+                            <label class="form-label">Doctor</label>
+                            <div class="form-control">@Model.Doctor?.FirstName @Model.Doctor?.LastName</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Patient</label>
+                            <div class="form-control">@Model.Patient?.FirstName @Model.Patient?.LastName</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <div class="form-control">@Model.Title</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sickness</label>
+                            <div class="form-control">@Model.Sickness</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Diagnosis</label>
+                            <div class="form-control">@Model.Diagnosis</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Start Of Sickness</label>
+                            <div class="form-control">@Model.StartOfSickness.ToString("dd.MM.yyyy")</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">End Of Sickness</label>
+                            <div class="form-control">
+                                @(Model.EndOfSickness.HasValue 
+                                    ? Model.EndOfSickness.Value.ToString("dd.MM.yyyy") 
+                                    : "Ongoing")
+                            </div>
+                        </div>
+                    </div>
+                    <div id="medicalDocumentEditMode" style="display:none;">
+                        <input type="hidden" name="Id" value="@Model.Id" />
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" name="Title" value="@Model.Title" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sickness</label>
+                            <input type="text" class="form-control" name="Sickness" value="@Model.Sickness" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Diagnosis</label>
+                            <input type="text" class="form-control" name="Diagnosis" value="@Model.Diagnosis" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Start Of Sickness</label>
+                            <input type="date" class="form-control" name="StartOfSickness" value="@Model.StartOfSickness.ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">End Of Sickness</label>
+                            <input type="date" class="form-control" name="EndOfSickness" value="@(Model.EndOfSickness.HasValue ? Model.EndOfSickness.Value.ToString("yyyy-MM-dd") : "")" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="editMedicalDocumentBtn" class="btn btn-warning" onclick="toggleMedicalDocumentEditMode(true)">Edit</button>
+                    <button type="button" id="cancelMedicalDocumentEditBtn" class="btn btn-danger" style="display:none;" onclick="toggleMedicalDocumentEditMode(false)">Cancel</button>
+                    <button type="submit" id="confirmMedicalDocumentEditBtn" class="btn btn-primary" style="display:none;">Confirm</button>
+                    <button type="button" class="btn btn-secondary" id="closeMedicalDocumentFooterBtn" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+        function toggleMedicalDocumentEditMode(editMode) {
+        document.getElementById('medicalDocumentViewMode').style.display = editMode ? 'none' : '';
+        document.getElementById('medicalDocumentEditMode').style.display = editMode ? '' : 'none';
+        document.getElementById('editMedicalDocumentBtn').style.display = editMode ? 'none' : '';
+        document.getElementById('cancelMedicalDocumentEditBtn').style.display = editMode ? '' : 'none';
+        document.getElementById('confirmMedicalDocumentEditBtn').style.display = editMode ? '' : 'none';
+        document.getElementById('closeMedicalDocumentBtn').style.display = editMode ? 'none' : '';
+        document.getElementById('closeMedicalDocumentFooterBtn').style.display = editMode ? 'none' : '';
+        document.getElementById('medicalDocumentDetailsLabel').textContent = editMode
+            ? 'Edit Medical Document'
+            : 'Medical Document Details';
+    }
+</script>
+

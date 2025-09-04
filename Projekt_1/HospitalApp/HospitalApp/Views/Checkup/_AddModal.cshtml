@@ -1,0 +1,63 @@
+﻿@model HospitalApp.Models.Checkup
+@{
+    var checkupTypes = ViewBag.CheckupTypes as List<HospitalApp.Models.CheckupType>;
+    var doctors = ViewBag.Doctors as List<HospitalApp.Models.Doctor>;
+    int patientId = Model.PatientId;
+}
+
+<div class="modal fade" id="addCheckupModal" tabindex="-1" aria-labelledby="addCheckupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-action="Add" asp-controller="Checkup" enctype="multipart/form-data">
+                <input type="hidden" name="PatientId" value="@patientId" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCheckupModalLabel">Schedule New Checkup</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="Title" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="description" name="Description" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="time" class="form-label">Date & Time</label>
+                        <input type="datetime-local" class="form-control" id="time" name="Time" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="typeId" class="form-label">Checkup Type</label>
+                        <select class="form-select" id="typeId" name="TypeId" required>
+                            <option value="">Select type...</option>
+                            @foreach (var type in checkupTypes ?? Enumerable.Empty<HospitalApp.Models.CheckupType>())
+                            {
+                                <option value="@type.Id">@type.Name (@type.Acronym)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="doctorIds" class="form-label">Doctors</label>
+                        <select class="form-select" id="doctorIds" name="DoctorIds" multiple required>
+                            @foreach (var doc in doctors ?? Enumerable.Empty<HospitalApp.Models.Doctor>())
+                            {
+                                <option value="@doc.Id">@doc.FirstName @doc.LastName</option>
+                            }
+                        </select>
+                        <small class="form-text text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="checkupImages" class="form-label">Add Documents/Images</label>
+                        <input type="file" class="form-control" id="checkupImages" name="CheckupImages" multiple accept="image/*,.pdf,.doc,.docx" />
+                        <small class="form-text text-muted">You can select multiple files.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Checkup</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
