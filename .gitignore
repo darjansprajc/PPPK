@@ -1,7 +1,7 @@
 VUA-PPPK-Tembo-Upute (2).pdf
 Projekt_1/SomeInfo.txt
 
-__pycache__/
+Projekt_2/__pycache__/
 *.pyc
 *.pyo
 *.pyd
@@ -10,19 +10,19 @@ __pycache__/
 *.log
 *.sqlite3
 
-.venv/
-venv/
-env/
+Projekt_2/.venv/
+Projekt_2/venv/
+Projekt_2/env/
 
-.ipynb_checkpoints/
+Projekt_2/.ipynb_checkpoints/
 
-.vscode/
-.idea/
+Projekt_2/.vscode/
+Projekt_2/.idea/
 *.iml
 
-.DS_Store
-Thumbs.db
+Projekt_2/.DS_Store
+Projekt_2/Thumbs.db
 
-data/*
-!data/TCGA_clinical_survival_data.tsv
-!data/.gitkeep
+Projekt_2/data/*
+!Projekt_2/data/TCGA_clinical_survival_data.tsv
+!Projekt_2/data/.gitkeep
